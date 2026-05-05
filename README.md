@@ -1,25 +1,30 @@
-# Lava SDK for Python
+# Lava SDK для Python
 
 ![Python](https://img.shields.io/badge/python-%5E3.8-blue?style=plastic)
 ![License](https://img.shields.io/badge/license-MIT-green?style=plastic)
+![Unofficial Port](https://img.shields.io/badge/неофициальный-порт-orange?style=plastic)
 
-Python SDK for working with the [Lava Payment](https://lava.ru) API via the `LavaFacade` class.
+> ⚠️ **Это неофициальный порт.** Данный пакет является неофициальным портом официального PHP SDK Lava на Python, выполненным сообществом. Проект не аффилирован с компанией Lava Payment и не является официальным продуктом. Используйте на свой страх и риск.
 
-## Installation
+Неофициальный Python-порт PHP SDK Lava. Предоставляет полный функционал для работы с API [Lava Payment](https://lava.ru) через класс `LavaFacade`.
 
-```bash
-pip install -r requirements.txt
-```
+## Документация
 
-Or install directly into your project:
+- [Установка и зависимости](docs/installation.md)
+- [Инициализация и конфигурация](docs/configuration.md)
+- [Инвойсы](docs/invoices.md)
+- [Возвраты](docs/refunds.md)
+- [Выводы средств](docs/payoffs.md)
+- [H2H-платежи](docs/h2h.md)
+- [Вебхуки и подписи](docs/webhooks.md)
+- [Баланс](docs/balance.md)
+- [Курсы валют](docs/courses.md)
+- [Исключения](docs/exceptions.md)
+- [Справочник классов](docs/reference.md)
 
-```bash
-pip install requests
-```
+## Быстрый старт
 
-## Quick Start
-
-### Initialization (shop methods only)
+### Инициализация (только методы магазина)
 
 ```python
 from lava_sdk.http.lava_facade import LavaFacade
@@ -31,9 +36,9 @@ facade = LavaFacade(
 )
 ```
 
-### Initialization with profile/payoff methods
+### Инициализация с методами профиля и выводов
 
-For profile and payoff methods (`create_payoff`, `get_status_payoff`, `get_payoff_tariffs`, `check_wallet`, `get_profile_balance`, `check_payoff_signature`) pass a `ProfileSecretDto`.
+Для методов профиля и выводов (`create_payoff`, `get_status_payoff`, `get_payoff_tariffs`, `check_wallet`, `get_profile_balance`, `check_payoff_signature`) необходимо передать `ProfileSecretDto`.
 
 ```python
 from lava_sdk.http.lava_facade import LavaFacade
@@ -53,158 +58,39 @@ facade = LavaFacade(
 )
 ```
 
-## Facade Methods
+## Основные методы
 
-### Invoices
+### Инвойсы
 
-#### Create invoice — `create_invoice`
+- `create_invoice(dto)` — создать новый инвойс (счёт на оплату)
+- `check_status_invoice(dto)` — получить статус инвойса по его идентификатору
+- `get_availible_tariffs()` — получить список доступных тарифов для оплаты
 
-```python
-from lava_sdk.dto.request.invoice.create_invoice_dto import CreateInvoiceDto
+### Возвраты
 
-dto = CreateInvoiceDto(
-    sum="300.09",
-    order_id="order-1001",
-    hook_url="https://example.com/hook",
-    success_url="https://example.com/success",
-    fail_url="https://example.com/fail",
-    expire=300,
-    custom_fields='{"productId":39}',
-    comment="Pay product",
-)
+- `create_refund(dto)` — создать возврат средств по инвойсу
+- `check_status_refund(dto)` — получить статус возврата по его идентификатору
 
-response = facade.create_invoice(dto)
-# response is a CreatedInvoiceDto
-```
+### Баланс
 
-#### Invoice status — `check_status_invoice`
+- `get_profile_balance()` — получить баланс профиля
+- `get_shop_balance()` *(устарело)* — получить баланс магазина; используйте `get_profile_balance()`
 
-```python
-from lava_sdk.dto.request.invoice.get_status_invoice_dto import GetStatusInvoiceDto
+### Выводы средств
 
-dto = GetStatusInvoiceDto(invoice_id="some-invoice-id")
-response = facade.check_status_invoice(dto)
-# response is a StatusInvoiceDto
-```
+- `create_payoff(dto)` — создать заявку на вывод средств
+- `get_status_payoff(dto)` — получить статус вывода по его идентификатору
+- `get_payoff_tariffs()` — получить список доступных тарифов для выводов
+- `check_wallet(dto)` — проверить валидность кошелька перед выводом
 
-#### Available tariffs — `get_availible_tariffs`
+### Вебхуки и подписи
 
-```python
-tariffs = facade.get_availible_tariffs()
-# returns a list of AvailibleTariffDto
-```
+- `check_sign_webhook(body, signature)` — проверить подпись входящего вебхука магазина
+- `check_payoff_signature(body, signature)` — проверить подпись вебхука вывода средств
 
-### Refunds
+## Исключения
 
-#### Create refund — `create_refund`
-
-```python
-from lava_sdk.dto.request.refund.create_refund_dto import CreateRefundDto
-
-dto = CreateRefundDto(
-    invoice_id="invoice-id",
-    amount=100.00,
-)
-
-response = facade.create_refund(dto)
-# response is a CreatedRefundDto
-```
-
-#### Refund status — `check_status_refund`
-
-```python
-from lava_sdk.dto.request.refund.get_status_refund_dto import GetStatusRefundDto
-
-dto = GetStatusRefundDto(refund_id="refund-id")
-response = facade.check_status_refund(dto)
-# response is a StatusRefundDto
-```
-
-### Balance
-
-#### Profile balance — `get_profile_balance`
-
-```python
-balance = facade.get_profile_balance()
-# returns a ProfileBalanceDto
-```
-
-#### Shop balance — `get_shop_balance` *(deprecated)*
-
-```python
-balance = facade.get_shop_balance()
-# deprecated — use get_profile_balance() instead
-```
-
-### Payoffs (withdrawals)
-
-#### Create payoff — `create_payoff`
-
-```python
-from lava_sdk.dto.request.payoff.create_payoff_dto import CreatePayoffDto
-
-dto = CreatePayoffDto(
-    order_id="withdraw-order-1",
-    amount=10.00,
-    service="lava_payoff",
-)
-
-response = facade.create_payoff(dto)
-# response is a CreatedPayoffDto
-```
-
-#### Payoff status — `get_status_payoff`
-
-```python
-from lava_sdk.dto.request.payoff.get_payoff_status_dto import GetPayoffStatusDto
-
-dto = GetPayoffStatusDto(payoff_id="payoff-id")
-response = facade.get_status_payoff(dto)
-# response is a StatusPayoffDto
-```
-
-#### Payoff tariffs — `get_payoff_tariffs`
-
-```python
-tariffs = facade.get_payoff_tariffs()
-```
-
-#### Check wallet — `check_wallet`
-
-```python
-from lava_sdk.dto.request.payoff.check_wallet_request_dto import CheckWalletRequestDto
-
-dto = CheckWalletRequestDto(service="lava_payoff", wallet="wallet_value")
-response = facade.check_wallet(dto)
-# response is a CheckWalletResponseDto
-```
-
-### Webhooks & Signatures
-
-#### Verify shop webhook signature — `check_sign_webhook`
-
-```python
-# In a Flask/FastAPI/Django handler:
-body = request.get_data(as_text=True)       # raw JSON string from the request body
-signature = request.headers.get("Authorization")
-
-is_valid = facade.check_sign_webhook(body, signature)
-if not is_valid:
-    raise Exception("Invalid webhook signature")
-```
-
-#### Verify payoff webhook signature — `check_payoff_signature`
-
-```python
-body = request.get_data(as_text=True)
-signature = request.headers.get("Authorization")
-
-is_valid = facade.check_payoff_signature(body, signature)
-```
-
-## Exceptions
-
-All API errors raise typed exceptions. Wrap facade calls in `try/except`:
+Все ошибки API выбрасываются в виде типизированных исключений. Оборачивайте вызовы фасада в `try/except`:
 
 ```python
 from lava_sdk.exceptions.invoice_exception import InvoiceException
@@ -219,14 +105,14 @@ except LavaBaseException as e:
     print(f"SDK error {e.code}: {e.message}")
 ```
 
-## Running Tests
+## Тесты
 
 ```bash
 pip install -r requirements-dev.txt
 pytest
 ```
 
-## Project Structure
+## Структура проекта
 
 ```text
 lava_sdk/
@@ -249,3 +135,7 @@ tests/
 ├── test_webhook.py
 └── …
 ```
+
+## Лицензия
+
+MIT
