@@ -21,7 +21,7 @@ pip install requests
 
 ### Initialization (shop methods only)
 
-```/dev/null/example.py#L1-8
+```python
 from lava_sdk.http.lava_facade import LavaFacade
 
 facade = LavaFacade(
@@ -35,7 +35,7 @@ facade = LavaFacade(
 
 For profile and payoff methods (`create_payoff`, `get_status_payoff`, `get_payoff_tariffs`, `check_wallet`, `get_profile_balance`, `check_payoff_signature`) pass a `ProfileSecretDto`.
 
-```/dev/null/example.py#L1-16
+```python
 from lava_sdk.http.lava_facade import LavaFacade
 from lava_sdk.dto.secret.profile_secret_dto import ProfileSecretDto
 
@@ -59,7 +59,7 @@ facade = LavaFacade(
 
 #### Create invoice — `create_invoice`
 
-```/dev/null/example.py#L1-18
+```python
 from lava_sdk.dto.request.invoice.create_invoice_dto import CreateInvoiceDto
 
 dto = CreateInvoiceDto(
@@ -79,7 +79,7 @@ response = facade.create_invoice(dto)
 
 #### Invoice status — `check_status_invoice`
 
-```/dev/null/example.py#L1-8
+```python
 from lava_sdk.dto.request.invoice.get_status_invoice_dto import GetStatusInvoiceDto
 
 dto = GetStatusInvoiceDto(invoice_id="some-invoice-id")
@@ -89,7 +89,7 @@ response = facade.check_status_invoice(dto)
 
 #### Available tariffs — `get_availible_tariffs`
 
-```/dev/null/example.py#L1-3
+```python
 tariffs = facade.get_availible_tariffs()
 # returns a list of AvailibleTariffDto
 ```
@@ -98,7 +98,7 @@ tariffs = facade.get_availible_tariffs()
 
 #### Create refund — `create_refund`
 
-```/dev/null/example.py#L1-9
+```python
 from lava_sdk.dto.request.refund.create_refund_dto import CreateRefundDto
 
 dto = CreateRefundDto(
@@ -112,7 +112,7 @@ response = facade.create_refund(dto)
 
 #### Refund status — `check_status_refund`
 
-```/dev/null/example.py#L1-6
+```python
 from lava_sdk.dto.request.refund.get_status_refund_dto import GetStatusRefundDto
 
 dto = GetStatusRefundDto(refund_id="refund-id")
@@ -124,14 +124,14 @@ response = facade.check_status_refund(dto)
 
 #### Profile balance — `get_profile_balance`
 
-```/dev/null/example.py#L1-3
+```python
 balance = facade.get_profile_balance()
 # returns a ProfileBalanceDto
 ```
 
 #### Shop balance — `get_shop_balance` *(deprecated)*
 
-```/dev/null/example.py#L1-3
+```python
 balance = facade.get_shop_balance()
 # deprecated — use get_profile_balance() instead
 ```
@@ -140,7 +140,7 @@ balance = facade.get_shop_balance()
 
 #### Create payoff — `create_payoff`
 
-```/dev/null/example.py#L1-10
+```python
 from lava_sdk.dto.request.payoff.create_payoff_dto import CreatePayoffDto
 
 dto = CreatePayoffDto(
@@ -155,7 +155,7 @@ response = facade.create_payoff(dto)
 
 #### Payoff status — `get_status_payoff`
 
-```/dev/null/example.py#L1-6
+```python
 from lava_sdk.dto.request.payoff.get_payoff_status_dto import GetPayoffStatusDto
 
 dto = GetPayoffStatusDto(payoff_id="payoff-id")
@@ -165,13 +165,13 @@ response = facade.get_status_payoff(dto)
 
 #### Payoff tariffs — `get_payoff_tariffs`
 
-```/dev/null/example.py#L1-2
+```python
 tariffs = facade.get_payoff_tariffs()
 ```
 
 #### Check wallet — `check_wallet`
 
-```/dev/null/example.py#L1-7
+```python
 from lava_sdk.dto.request.payoff.check_wallet_request_dto import CheckWalletRequestDto
 
 dto = CheckWalletRequestDto(service="lava_payoff", wallet="wallet_value")
@@ -183,7 +183,7 @@ response = facade.check_wallet(dto)
 
 #### Verify shop webhook signature — `check_sign_webhook`
 
-```/dev/null/example.py#L1-10
+```python
 # In a Flask/FastAPI/Django handler:
 body = request.get_data(as_text=True)       # raw JSON string from the request body
 signature = request.headers.get("Authorization")
@@ -195,7 +195,7 @@ if not is_valid:
 
 #### Verify payoff webhook signature — `check_payoff_signature`
 
-```/dev/null/example.py#L1-7
+```python
 body = request.get_data(as_text=True)
 signature = request.headers.get("Authorization")
 
@@ -206,7 +206,7 @@ is_valid = facade.check_payoff_signature(body, signature)
 
 All API errors raise typed exceptions. Wrap facade calls in `try/except`:
 
-```/dev/null/example.py#L1-12
+```python
 from lava_sdk.exceptions.invoice_exception import InvoiceException
 from lava_sdk.exceptions.payoff_exception import PayoffException
 from lava_sdk.exceptions.base_exception import LavaBaseException
@@ -228,7 +228,7 @@ pytest
 
 ## Project Structure
 
-```/dev/null/structure.txt#L1-20
+```text
 lava_sdk/
 ├── constants/          # API base URL and endpoint paths
 ├── dto/
@@ -249,7 +249,3 @@ tests/
 ├── test_webhook.py
 └── …
 ```
-
-## License
-
-MIT
