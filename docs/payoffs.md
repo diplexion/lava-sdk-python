@@ -12,7 +12,7 @@
 
 Перед вызовом любого метода вывода необходимо создать экземпляр `ProfileSecretDto` и передать его в конструктор `LavaFacade` через параметр `profile_secret_data`:
 
-```lava-sdk-python/docs/payoffs.md#L1-1
+```python
 from lava_sdk.http.lava_facade import LavaFacade
 from lava_sdk.dto.secret.profile_secret_dto import ProfileSecretDto
 
@@ -42,7 +42,7 @@ facade = LavaFacade(
 
 Метод создаёт заявку на вывод средств на указанный кошелёк получателя.
 
-```lava-sdk-python/docs/payoffs.md#L1-1
+```python
 facade.create_payoff(dto: CreatePayoffDto) -> CreatedPayoffDto
 ```
 
@@ -68,7 +68,7 @@ facade.create_payoff(dto: CreatePayoffDto) -> CreatedPayoffDto
 
 ### Пример использования
 
-```lava-sdk-python/docs/payoffs.md#L1-1
+```python
 from lava_sdk.http.lava_facade import LavaFacade
 from lava_sdk.dto.secret.profile_secret_dto import ProfileSecretDto
 from lava_sdk.dto.request.payoff.create_payoff_dto import CreatePayoffDto
@@ -123,7 +123,7 @@ except LavaBaseException as e:
 
 Метод возвращает текущий статус ранее созданного вывода, а также подробную информацию о суммах, комиссии и возможных ошибках.
 
-```lava-sdk-python/docs/payoffs.md#L1-1
+```python
 facade.get_status_payoff(dto: GetPayoffStatusDto) -> StatusPayoffDto
 ```
 
@@ -155,7 +155,7 @@ facade.get_status_payoff(dto: GetPayoffStatusDto) -> StatusPayoffDto
 
 ### Пример использования
 
-```lava-sdk-python/docs/payoffs.md#L1-1
+```python
 from lava_sdk.http.lava_facade import LavaFacade
 from lava_sdk.dto.secret.profile_secret_dto import ProfileSecretDto
 from lava_sdk.dto.request.payoff.get_payoff_status_dto import GetPayoffStatusDto
@@ -237,7 +237,7 @@ except LavaBaseException as e:
 
 Метод возвращает список доступных сервисов для вывода средств с информацией о комиссиях, минимальных и максимальных суммах. Рекомендуется вызывать этот метод перед созданием вывода, чтобы отобразить пользователю актуальные условия.
 
-```lava-sdk-python/docs/payoffs.md#L1-1
+```python
 facade.get_payoff_tariffs() -> List[TariffResponseDto]
 ```
 
@@ -257,7 +257,7 @@ facade.get_payoff_tariffs() -> List[TariffResponseDto]
 
 ### Пример использования
 
-```lava-sdk-python/docs/payoffs.md#L1-1
+```python
 from lava_sdk.http.lava_facade import LavaFacade
 from lava_sdk.dto.secret.profile_secret_dto import ProfileSecretDto
 from lava_sdk.exceptions.payoff.error_get_payoff_tariff_exception import (
@@ -324,7 +324,7 @@ except LavaBaseException as e:
 
 Метод позволяет проверить корректность адреса кошелька или номера телефона перед созданием вывода. Рекомендуется использовать до вызова `create_payoff`, чтобы убедиться в валидности реквизитов получателя.
 
-```lava-sdk-python/docs/payoffs.md#L1-1
+```python
 facade.check_wallet(dto: CheckWalletRequestDto) -> CheckWalletResponseDto
 ```
 
@@ -345,7 +345,7 @@ facade.check_wallet(dto: CheckWalletRequestDto) -> CheckWalletResponseDto
 
 ### Пример использования
 
-```lava-sdk-python/docs/payoffs.md#L1-1
+```python
 from lava_sdk.http.lava_facade import LavaFacade
 from lava_sdk.dto.secret.profile_secret_dto import ProfileSecretDto
 from lava_sdk.dto.request.payoff.check_wallet_request_dto import CheckWalletRequestDto
@@ -418,7 +418,7 @@ except LavaBaseException as e:
 
 Все они наследуются от `LavaBaseException`, который содержит атрибуты `message` (текст ошибки) и `code` (числовой код).
 
-```lava-sdk-python/docs/payoffs.md#L1-1
+```python
 from lava_sdk.exceptions.payoff.payoff_exception import PayoffException
 from lava_sdk.exceptions.payoff.check_wallet_exception import CheckWalletException
 from lava_sdk.exceptions.payoff.error_get_payoff_tariff_exception import (
